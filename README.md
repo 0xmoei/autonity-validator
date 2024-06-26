@@ -163,7 +163,7 @@ aut account new -k $HOME/.autonity/keystore/oracle.key
 aut account new -k $HOME/.autonity/keystore/tresure.key
 ```
 
-> If you are an existing user of Game R4 you need to import your last round tresurekey which was registered in the R4 form
+> If you are an existing user of Game R5 you need to import your last round tresurekey which was registered in the R4 form
 >
 > Make a `wallet.priv` file in your root directory and paste your previous wallet `privatekey` in it
 ```console
