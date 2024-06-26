@@ -233,7 +233,7 @@ aut account info
 cd
 git clone https://github.com/autonity/autonity-oracle && cd autonity-oracle
 git fetch --all 
-git checkout v0.1.6 
+git checkout v0.1.9 
 make autoracle
 mv build/bin/autoracle /usr/local/bin
 
