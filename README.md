@@ -469,4 +469,8 @@ aut account info
 
 #
 
+** Thanks lesnik13utsa & zuka_116 for their detailed guide **
+
+#
+
 ********Follow [0xMoei](https://twitter.com/0xMoei) For more info********
