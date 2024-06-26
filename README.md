@@ -38,7 +38,7 @@ sudo apt update && sudo apt upgrade -y
 apt install curl iptables build-essential git wget jq make gcc nano tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip chrony libleveldb-dev liblz4-tool -y
 ```
 ### 1.2- Install Golang
-```cosnole
+```console
 # remove old versions
 sudo apt-get remove golang-go
 sudo apt-get remove --auto-remove golang-go
@@ -73,7 +73,7 @@ ethkey --version
 
 > #Only if you have problems installing aut or other binaries, use these below commands or pass it.
 
-```cosnole
+```console
 export CGO_CFLAGS="-O -D__BLST_PORTABLE__" 
 export CGO_CFLAGS_ALLOW="-O -D__BLST_PORTABLE__"
 make clean
@@ -81,7 +81,7 @@ make clean
 
 ## 2. Install Autonity Utility (Aut)
 ### 2.1 install Python3
-```cosnole
+```console
 cd
 sudo apt install python3-pip && sudo apt install python3.10-venv && sudo pip install pipx
 ```
@@ -96,7 +96,7 @@ aut --version
 ```
 
 ### 2.2 Edit .autrc file
-```cosnole
+```console
 tee <<EOF >/dev/null $HOME/.autrc
 [aut]
 rpc_endpoint= ws://127.0.0.1:8546
@@ -108,7 +108,7 @@ EOF
 ![Screenshot_1](https://github.com/0xmoei/autonity-validator/assets/90371338/5e6735de-cbdc-4c1d-b176-a4a440340c6d)
 
 ### 3.1 Open ports
-```cosnole
+```console
 sudo ufw allow 8545 && sudo ufw allow 8546 && sudo ufw allow 6060 && sudo ufw allow 30303
 ```
 
@@ -342,3 +342,131 @@ Proof: Node ownership Signature Hash ( step: 6.1 )
 ```console
 aut validator register ENODE ORACLE_ADDRESS CONSENSUS_KEY PROOF | aut tx sign - | aut tx send -
 ```
+
+### 6.6 Find your validator address in the validators list
+```console
+aut validator list
+```
+
+### 6.7 Check validator info
+Replace VALIDATOR_ADDRESS
+```console
+aut validator info --validator VALIDATOR_ADDRESS
+```
+
+## 7. Bond NTN stake to your Validator
+Replace VALIDATOR_ADDRESS
+```console
+aut validator bond --validator VALIDATOR_ADDRESS 1 | aut tx sign - | aut tx send -
+```
+
+## 8. Form 2 - Validator Registeration
+> Now is the time to register your validator. To do this, go to the website and fill out the data - https://game.autonity.org/awards/register-validator.html (Form is disabled now, wait for it to get opened then continue the steps)
+>
+> On the node, you need to sign a message with your validator nodekey instead of your tresurekey (we signed with tresurekey in form 1)
+
+### 8.1 Get private key of nodekey
+our default signing key is tresure key, we need to sign a message specifically with our nodekey so we need to create a nodekey2 file which contains our nodekey privatekey
+```console
+head -c 64 $HOME/autonity-chaindata/autonity/nodekey
+```
+
+### 8.2 Enter your Private key in the file
+```console
+nano $HOME/nodekey2
+```
+`Ctrl+X+Y` `Enter`
+
+### 8.3 Add nodekey file to our account lists
+```console
+aut account import-private-key $HOME/nodekey2
+mv $HOME/.autonity/keystore/UTC* $HOME/.autonity/keystore/nodekey.key
+```
+
+### 8.4 Sign ”Validator Onboarded” message with our nodekey
+```console
+aut account sign-message "validator onboarded" -k $HOME/.autonity/keystore/nodekey.key
+```
+As soon as the validator is selected to the committee, we should see similar logs on the node
+![Screenshot_6](https://github.com/0xmoei/autonity-validator/assets/90371338/c1e890b5-aa6b-4451-9268-1cc8f1ab1bc8)
+
+## ***CAUTIOS***
+* Now we have our validator registered on the network with 1 NTN stake bonded to it but if we want to get Testnet Points, we need to be in committee
+* There’s a limited room in committee and it depends on the NTN staked on your validator. So you need more NTN to be in `top100` in stakeflow
+* Check committee leaderboard [here](https://stakeflow.io/autonity-piccadilly/validators)
+
+## 9. Buy NTN in CAX
+> CAX is a centralized automated exchange. If you have already registered in the Form 1, then your CAX account is automatically funded with 1 MILLION USD . It's linked to your registered member account so you can easily move assets between internal and external networks
+>
+> The exchange uses API keys for authentication, so you must create an API key for your account before you start trading
+
+* CAX is disabled now, but you need to check discord closely to see when it opens, you must be early to buy more NTN in lower prices
+
+### 9.1 Install httpie
+```console
+sudo apt install snapd
+sudo apt install httpie
+```
+
+### 9.2 Get API KEY
+```console
+MESSAGE=$(jq -nc --arg nonce "$(date +%s%N)" '$ARGS.named')
+
+aut account sign-message $MESSAGE message.sig -k $HOME/.autonity/keystore/tresure.key > message.sig
+
+echo -n $MESSAGE | https https://cax.piccadilly.autonity.org/api/apikeys api-sig:@message.sig
+```
+![image](https://github.com/0xmoei/autonity-validator/assets/90371338/27db53d9-90e2-431d-ac55-99f01cef6fd4)
+
+### 9.3 Now you can trade NTN
+Replace API_KEY with your api in step: 9.2
+```console
+KEY=API_KEY
+```
+```console
+# View your tresure.key wallet balance
+aut account info -k $HOME/.autonity/keystore/tresure.key
+```
+```console
+# View off-chain CAX balance
+https GET https://cax.piccadilly.autonity.org/api/balances/ API-Key:$KEY
+```
+```console
+# View orderbooks
+https GET https://cax.piccadilly.autonity.org/api/orderbooks/ API-Key:$KEY
+```
+```console
+# Getting current price of NTN-USD
+https GET https://cax.piccadilly.autonity.org/api/orderbooks/NTN-USD/quote API-Key:$KEY
+```
+```console
+# Getting current price of ATN-USD
+https GET https://cax.piccadilly.autonity.org/api/orderbooks/ATN-USD/quote API-Key:$KEY
+```
+```console
+# Buy NTN with limit-order (Replace x with an amount of your favor)
+https POST https://cax.piccadilly.autonity.org/api/orders/ API-Key:$KEY pair=NTN-USD side=bid price=x amount=x
+```
+```console
+# view order status (you need the "order_id" number, which you will receive in response to the previous request)
+https GET https://cax.piccadilly.autonity.org/api/orders/order_id API-Key:$KEY
+```
+```console
+# Cancel open order
+https DELETE https://cax.piccadilly.autonity.org/api/orders/313469 API-Key:$KEY
+```
+```console
+# Send X amount of NTN from off-chain CAX to tresurekey wallet
+https POST https://cax.piccadilly.autonity.org/api/withdraws/ API-Key:$KEY symbol=NTN amount=X
+```
+
+### NTN Balance
+```console
+aut account info
+```
+
+## 10. You can now bond NTN to your validator again with step 7 command, but increase the amount from 1
+
+#
+
+********Follow [0xMoei](https://twitter.com/0xMoei) For more info********
