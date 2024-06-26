@@ -116,7 +116,7 @@ sudo ufw allow 8545 && sudo ufw allow 8546 && sudo ufw allow 6060 && sudo ufw al
 ```console
 cd
 git clone https://github.com/autonity/autonity && cd autonity
-git checkout tags/v0.13.0 -b v0.13.0
+git checkout tags/v0.14.0 -b v0.14.0
 make autonity
 mv $HOME/autonity/build/bin/autonity /usr/local/bin/
 
