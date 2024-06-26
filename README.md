@@ -226,6 +226,7 @@ aut account info
 
 ## 5- Install Oracle
 > Recommended Specifications
+> 
 ![Screenshot_3](https://github.com/0xmoei/autonity-validator/assets/90371338/214c05a4-24f4-41e8-97d8-83ae40e1b432)
 
 ### 5.1 Install
@@ -245,7 +246,7 @@ autoracle version
 ```console
 nano $HOME/autonity-oracle/build/bin/plugins-conf.yml
 ```
-You now need to remove # from bottom lines, Register in the data-feed websites and add your custom API to the lines
+* You now need to remove # from bottom lines, Register in the data-feed websites and add your custom API to the lines
 ![Screenshot_4](https://github.com/0xmoei/autonity-validator/assets/90371338/ec69e87e-1d20-47e8-96be-96ac3aaf75da)
 
 ### Websites:
