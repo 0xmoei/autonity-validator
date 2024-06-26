@@ -362,7 +362,7 @@ aut validator bond --validator VALIDATOR_ADDRESS 1 | aut tx sign - | aut tx send
 ```
 
 ## 8. Form 2 - Validator Registeration
-> Now is the time to register your validator. To do this, go to the website and fill out the data - https://game.autonity.org/awards/register-validator.html (Form is disabled now, wait for it to get opened then continue the steps)
+> Now is the time to register your validator. To do this, go to the website and fill out the data - https://stake-delegation.pages.dev/#join
 >
 > On the node, you need to sign a message with your validator nodekey instead of your tresurekey (we signed with tresurekey in form 1)
 
@@ -386,7 +386,7 @@ mv $HOME/.autonity/keystore/UTC* $HOME/.autonity/keystore/nodekey.key
 
 ### 8.4 Sign ”Validator Onboarded” message with our nodekey
 ```console
-aut account sign-message "validator onboarded" -k $HOME/.autonity/keystore/nodekey.key
+aut account sign-message "Application for the stake delegation program" -k $HOME/.autonity/keystore/nodekey.key
 ```
 As soon as the validator is selected to the committee, we should see similar logs on the node
 ![Screenshot_6](https://github.com/0xmoei/autonity-validator/assets/90371338/c1e890b5-aa6b-4451-9268-1cc8f1ab1bc8)
