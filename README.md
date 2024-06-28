@@ -20,8 +20,7 @@
 
 ## We’ll cover in this tutorial:
 * Validator Node Task
-* RPC Node Task
-> I prefer Validator but If you want to register both of them, you need 2 seprate VPS servers
+> I prefer Validator in tutorial but there is a registration proccess for just RPC Node
 
 ## Useful links
 * Autonity [Discord](https://discord.gg/autonity)
