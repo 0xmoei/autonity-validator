@@ -406,7 +406,16 @@ As soon as the validator is selected to the committee, we should see similar log
 ### 9.1 Install httpie
 ```console
 sudo apt install snapd
-sudo apt install httpie
+
+sudo rm -rf /snap/httpie
+sudo rm -rf /var/snap/httpie
+
+export PATH=$PATH:~/.local/bin
+
+pip install httpie==3.0.0
+
+# your httpie version must be exactly 3.0.0
+httpie --version
 ```
 
 ### 9.2 Get API KEY
@@ -415,7 +424,7 @@ MESSAGE=$(jq -nc --arg nonce "$(date +%s%N)" '$ARGS.named')
 
 aut account sign-message $MESSAGE message.sig -k $HOME/.autonity/keystore/tresure.key > message.sig
 
-echo -n $MESSAGE | https https://cax.piccadilly.autonity.org/api/apikeys api-sig:@message.sig
+echo -n $MESSAGE | https --verify=no https://cax.piccadilly.autonity.org/api/apikeys api-sig:@message.sig
 ```
 ![image](https://github.com/0xmoei/autonity-validator/assets/90371338/27db53d9-90e2-431d-ac55-99f01cef6fd4)
 
