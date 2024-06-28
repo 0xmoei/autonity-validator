@@ -401,7 +401,7 @@ As soon as the validator is selected to the committee, we should see similar log
 >
 > The exchange uses API keys for authentication, so you must create an API key for your account before you start trading
 
-* CAX is disabled now, but you need to check discord closely to see when it opens, you must be early to buy more NTN in lower prices
+* You must be early or tricky to buy more NTN in lower prices in CAX
 
 ### 9.1 Install httpie
 ```console
@@ -428,49 +428,62 @@ echo -n $MESSAGE | https --verify=no https://cax.piccadilly.autonity.org/api/api
 ```
 ![image](https://github.com/0xmoei/autonity-validator/assets/90371338/27db53d9-90e2-431d-ac55-99f01cef6fd4)
 
-### 9.3 Now you can trade NTN
-Replace API_KEY with your api in step: 9.2
+### 9.3 Get USDC on your CAX offchain account
+
+1- All registered participants received 1,000,000 USDC on `Polygon Amoy testnet` Network in their registered tresure wallet
+
+2- Bridge USDC from Polygon Amoy to Picaddilly [here](https://usdc-frontend-autonity.vercel.app/)
+
+3- Get Polygon Amoy faucet [here](https://faucets.chain.link/polygon-amoy) or any site [here](https://www.google.com/search?q=polygon+amoy+faucet&oq=polygon+amoy+faucet&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGDwyBggCEC4YQNIBCDI1MjNqMGoxqAIAsAIA&sourceid=chrome&ie=UTF-8)
+
+4- You can add USDC token address in your metamask on picadilly testnet network to see your USDC amount
+`0x3a60C03a86eEAe30501ce1af04a6C04Cf0188700`
+
+5- Transfer USDC from Picadilly to CAX ( from Onchain to Offchain)
 ```console
+# Just Replace AMOUNT
+aut token transfer --token 0x3a60C03a86eEAe30501ce1af04a6C04Cf0188700 0x11F62c273dD23dbe4D1713C5629fc35713Aa5a94 AMOUNT | aut tx sign - | aut tx send -
+```
+
+### 10- CAX Commands
+```console
+# Replace API_KEY with your api in step: 9.2
 KEY=API_KEY
 ```
 ```console
-# View your tresure.key wallet balance
-aut account info -k $HOME/.autonity/keystore/tresure.key
-```
-```console
 # View off-chain CAX balance
-https GET https://cax.piccadilly.autonity.org/api/balances/ API-Key:$KEY
+https --verify=no GET https://cax.piccadilly.autonity.org/api/balances/ API-Key:$KEY
 ```
 ```console
 # View orderbooks
-https GET https://cax.piccadilly.autonity.org/api/orderbooks/ API-Key:$KEY
+https --verify=no GET https://cax.piccadilly.autonity.org/api/orderbooks/ API-Key:$KEY
 ```
 ```console
 # Getting current price of NTN-USD
-https GET https://cax.piccadilly.autonity.org/api/orderbooks/NTN-USD/quote API-Key:$KEY
+https --verify=no GET https://cax.piccadilly.autonity.org/api/orderbooks/NTN-USDC/quote API-Key:$KEY
 ```
 ```console
 # Getting current price of ATN-USD
-https GET https://cax.piccadilly.autonity.org/api/orderbooks/ATN-USD/quote API-Key:$KEY
+https --verify=no GET https://cax.piccadilly.autonity.org/api/orderbooks/ATN-USDC/quote API-Key:$KEY
 ```
 ```console
-# Buy NTN with limit-order (Replace x with an amount of your favor)
-https POST https://cax.piccadilly.autonity.org/api/orders/ API-Key:$KEY pair=NTN-USD side=bid price=x amount=x
+# Buy NTN with limit-order (Replace x with the price of your favor and y with the amount if NTN you want to bid or ask)
+https --verify=no POST https://cax.piccadilly.autonity.org/api/orders/ API-Key:$KEY pair=NTN-USDC side=bid price=x amount=y
 ```
 ```console
 # view order status (you need the "order_id" number, which you will receive in response to the previous request)
-https GET https://cax.piccadilly.autonity.org/api/orders/order_id API-Key:$KEY
+https --verify=no GET https://cax.piccadilly.autonity.org/api/orders/order_id API-Key:$KEY
 ```
 ```console
 # Cancel open order
-https DELETE https://cax.piccadilly.autonity.org/api/orders/313469 API-Key:$KEY
+https --verify=no DELETE https://cax.piccadilly.autonity.org/api/orders/313469 API-Key:$KEY
 ```
 ```console
 # Send X amount of NTN from off-chain CAX to tresurekey wallet
-https POST https://cax.piccadilly.autonity.org/api/withdraws/ API-Key:$KEY symbol=NTN amount=X
+https --verify=no POST https://cax.piccadilly.autonity.org/api/withdraws/ API-Key:$KEY symbol=NTN amount=X
 ```
 
-### NTN Balance
+### NTN Balance in your tresure wallet
 ```console
 aut account info
 ```
